@@ -1,1 +1,2 @@
-o
+
+        print(len(room))
