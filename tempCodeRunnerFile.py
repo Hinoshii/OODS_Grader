@@ -1,2 +1,2 @@
 
-        print(len(room))
+            self.tail = n
