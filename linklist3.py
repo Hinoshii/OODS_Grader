@@ -38,30 +38,6 @@ class LinkedList:
             n.next = self.head
             self.head = n
 
-    def search(self, item):
-        if not self.isEmpty():
-            h = self.head
-            index = 0
-            while (h != None) :
-                if h.value == item:
-                    return 'Found'
-                h = h.next
-                index += 1
-            return 'Not Found'
-        return 'Not Found'
-
-    def index(self, item):
-        if not self.isEmpty():
-            h = self.head
-            index = 0
-            while (h != None) :
-                if h.value == item:
-                    return index
-                h = h.next
-                index += 1
-            return -1
-        return -1
-
     def size(self):
         h = self.head
         size = 0
@@ -96,7 +72,7 @@ def main():
                     i.append(bokey[1])
                     checked = True
                 #checkhead
-                if i.head.value == bokey[1]:
+                elif i.head.value == bokey[1]:
                     i.addHead(bokey[0])
                     checked = True
 
@@ -125,6 +101,7 @@ def main():
             print(f"{count}:",i)
             count+=1
         print(f"Number of train(s): {count-1}")
+
     else:
         bokeylist = []
         trainlist = []
