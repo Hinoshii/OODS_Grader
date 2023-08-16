@@ -22,4 +22,7 @@ def main():
     print(stack+a)
 
 
-main()
+def main2():
+    print([875]*[1])
+
+main2()
