@@ -40,26 +40,28 @@ def printTree90(node, level = 0):
         print('     ' * level, node)
         printTree90(node.left, level + 1)
 
-def father(node,value,ans=[]):
+def checkpos(node, value, level = 0,found=False):
     if node != None:
-        ans = father(node.right,value,ans)
-        if node.right != None and node.right.data == value :
-            ans.append(node.data)
-        elif node.left != None and node.left.data == value :
-            ans.append(node.data)
-        ans = father(node.left,value,ans)
-    return ans
-
+        found = checkpos(node.right, value, level + 1,found)
+        if node.data == value:
+            if level == 0:
+                print("Root")
+                found = True
+            elif node.right == None and node.left == None:
+                print("Leaf")
+                found = True
+            else:
+                print("Inner")
+                found = True
+        found = checkpos(node.left, value, level + 1,found)
+    return found
+    
 
 tree = BinarySearchTree()
-data = input("Enter Input : ").split("/")
-for e in data[0].split():
-    tree.create(int(e))
+inp = [int(i) for i in input('Enter Input : ').split()]
+for i in range(1, len(inp)):
+    root = tree.create(inp[i])
 printTree90(tree.root)
-ans = father(tree.root,int(data[1]))
-if tree.root.data == int(data[1]):
-    print(f'None Because {tree.root.data} is Root')
-elif ans == []:
-    print('Not Found Data')
-else:
-    print(*ans)
+isfound = checkpos(tree.root,inp[0])
+if not isfound :
+    print("Not exist")
