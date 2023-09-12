@@ -25,7 +25,7 @@ class BinarySearchTree:
                     else:
                         current.left = Node(val)
                         break
-                elif val >= current.data:
+                elif val > current.data:
                     if current.right:
                         current = current.right
                     else:
@@ -34,32 +34,22 @@ class BinarySearchTree:
                 else:
                     break
                 
-def printTree90(node, level = 0):
+def printTree90(node, level = 0,ans =[]):
     if node != None:
-        printTree90(node.right, level + 1)
-        print('     ' * level, node)
-        printTree90(node.left, level + 1)
-
-def father(node,value,ans=[]):
-    if node != None:
-        ans = father(node.right,value,ans)
-        if node.right != None and node.right.data == value :
-            ans.append(node.data)
-        elif node.left != None and node.left.data == value :
-            ans.append(node.data)
-        ans = father(node.left,value,ans)
+        ans = printTree90(node.right, level + 1)
+        if node.left == None and node.right == None:
+            ans.append(level)
+        ans = printTree90(node.left, level + 1)
     return ans
 
-
 tree = BinarySearchTree()
-data = input("Enter Input : ").split("/")
-for e in data[0].split():
-    tree.create(int(e))
-printTree90(tree.root)
-ans = father(tree.root,int(data[1]))
-if tree.root.data == int(data[1]):
-    print(f'None Because {tree.root.data} is Root')
-elif ans == []:
-    print('Not Found Data')
-else:
-    print(*ans)
+inp = [int(i) for i in input('Enter input: ').split()]
+for i in range(len(inp)):
+    root = tree.create(inp[i])
+ans = printTree90(tree.root)
+print(f"{len(ans)} path(s)")
+ans.sort()
+for i in range(ans[-1]+1,0,-1):
+    path = ans.count(i)
+    if path != 0:
+        print(f"{path} path(s) that pass through {i} node(s)")
