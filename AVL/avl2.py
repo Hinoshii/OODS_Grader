@@ -9,14 +9,14 @@ class TreeNode(object):
         self.data =[val,nameValue(val)]
         self.right = None
         self.left = None
-        self.height = self.setHeight()
+        self.height = 1
 
     def getBalance(self):
         return self.getHeight(self.left) - self.getHeight(self.right)
     
     def getHeight(self,node):
         if node == None:
-            return -1
+            return 0
         return node.height
     
     def setHeight(self):
@@ -26,78 +26,107 @@ class TreeNode(object):
         return self.height
 
 class AVL_Tree(object):
-    def __init__(self):
-        self.root = None
-
     def insert(self, root, data):
         if root is None:
             return TreeNode(data)
+        elif nameValue(data) < root.data[1]:
+            root.left = self.insert(root.left, data)
         else:
-            if nameValue(data) < int(root.data[1]):
-                root.left = self.insert(root.left, data)
-            else:
-                root.right = self.insert(root.right, data)
-            root = self.rebalances(root)                
-            return root
-        
-    def updateHeight(self, root):
-        if root is not None:
-            self._postOrder(root.left)
-            self._postOrder(root.right)
-            root.setHeight()
+            root.right = self.insert(root.right, data)
+        root.setHeight()
 
-    def delete(self, root, data):
-        self.updateHeight(self.root)
-        if root is None : 
-            return root
-        if data < root.data[1] :
-            root.left = self.delete(root.left, data)
-        elif data > root.data[1] :
-            root.right = self.delete(root.right, data)
-        else :
-            if root.left is None or root.right is None :
-                root = root.left if root.right is None else root.right
-            else :
-                temp = root.left
-                while temp.right is not None :
-                    temp = temp.right
-                root.data = temp.data
-                root.left = self.delete(root.left, temp.data[1])
-            root = self.rebalances(root)         
+        balance = root.getBalance() 
+        # Case 1 - Left Left
+        if balance > 1 and nameValue(data) < root.left.data[1]:
+            return self.rightRotate(root)
+
+        # Case 2 - Right Right
+        if balance < -1 and nameValue(data) > root.right.data[1]:
+            return self.leftRotate(root)
+
+        # Case 3 - Left Right
+        if balance > 1 and nameValue(data) > root.left.data[1]:
+            root.left = self.leftRotate(root.left)
+            return self.rightRotate(root)
+
+        # Case 4 - Right Left
+        if balance < -1 and nameValue(data) < root.right.data[1]:
+            root.right = self.rightRotate(root.right)
+            return self.leftRotate(root)
+        
         return root
+    
+    def getMinValueNode(self, root):
+        if root is None or root.left is None:
+            return root
+ 
+        return self.getMinValueNode(root.left)
+    
+    def delete(self, root, key):
+        if not root:
+            return root
+ 
+        elif key < root.data[1]:
+            root.left = self.delete(root.left, key)
+ 
+        elif key > root.data[1]:
+            root.right = self.delete(root.right, key)
+ 
+        else:
+            if root.left is None:
+                temp = root.right
+                root = None
+                return temp
+ 
+            elif root.right is None:
+                temp = root.left
+                root = None
+                return temp
+ 
+            temp = self.getMinValueNode(root.right)
+            root.data = temp.data
+            root.right = self.delete(root.right,temp.data[1])
+
+            if root is None:
+                return root
+            balance = root.getBalance()
+            # Case 1 - Left Left
+            if balance > 1 and root.left.getBalance() >= 0:
+                return self.rightRotate(root)
+    
+            # Case 2 - Right Right
+            if balance < -1 and root.right.getBalance() <= 0:
+                return self.leftRotate(root)
+    
+            # Case 3 - Left Right
+            if balance > 1 and root.left.getBalance() < 0:
+                root.left = self.leftRotate(root.left)
+                return self.rightRotate(root)
+    
+            # Case 4 - Right Left
+            if balance < -1 and root.right.getBalance() > 0:
+                root.right = self.rightRotate(root.right)
+                return self.leftRotate(root)
+    
+            return root
 
     def leftRotate(self, x) :
-        y = x.left
-        x.left = y.right
-        y.right = x
-        x = y
-        x.right.setHeight()
+        y = x.right
+        z = y.left
+        y.left = x
+        x.right = z
+        y.setHeight()
         x.setHeight()
-        return x
+        return y
     
     def rightRotate(self, x) :
-        y = x.right
-        x.right = y.left
-        y.left = x    
-        x = y
-        x.left.setHeight()
+        y = x.left
+        z = y.right
+        y.right = x
+        x.left = z
+        y.setHeight()
         x.setHeight()
-        return x
-
-    def rebalances(self, x):
-        if x == None:
-            return x
-        balance = x.getBalance()
-        if balance == -2 : 
-            if x.right.getBalance() == 1 :
-                x.right = self.leftRotate(x.right)
-            x = self.rightRotate(x)
-        elif balance == 2 : 
-            if x.left.getBalance() == -1:   
-                x.left = self.rightRotate(x.left)                                         
-            x = self.leftRotate(x)
-        x.setHeight()
-        return x 
+        return y
 
     def printTree(self, node, level = 1):
         if node != None:
