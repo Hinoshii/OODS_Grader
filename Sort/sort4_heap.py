@@ -77,11 +77,8 @@ class MaxHeap:
     def insert(self, value):  
         self.heap.append(value)  
         i = len(self.heap) - 1  
-        while i > 0 and self.heap[i][:-1] >= self.heap[self.parent(i)][:-1]:
+        while i > 0 and self.heap[i][:-1] > self.heap[self.parent(i)][:-1] or (self.heap[i][:-1] == self.heap[self.parent(i)][:-1] and self.heap[i][-1] > self.heap[self.parent(i)][-1]):
             #swap node if child morethan parent
-            if self.heap[i][:-1] == self.heap[self.parent(i)][:-1] and self.heap[i][-1] < self.heap[self.parent(i)][-1]:
-                self.heap[i], self.heap[self.parent(i)] = self.heap[self.parent(i)], self.heap[i]
-                break
             self.heap[i], self.heap[self.parent(i)] = self.heap[self.parent(i)], self.heap[i]  
             i = self.parent(i)
 
@@ -102,7 +99,7 @@ class MaxHeap:
             child_index = self.left_child(i)  
             if self.right_child(i) < len(self.heap) and self.heap[self.right_child(i)] > self.heap[self.left_child(i)]:  
                 child_index = self.right_child(i)  
-            if self.heap[i] < self.heap[child_index] and self.heap[i][:-1] != self.heap[child_index][:-1]: 
+            if self.heap[i][:-1] < self.heap[child_index][:-1] or (self.heap[i][:-1] == self.heap[child_index][:-1] and self.heap[i][-1] > self.heap[child_index][-1]): 
                 self.heap[i], self.heap[child_index] = self.heap[child_index], self.heap[i]  
                 i = child_index  
             else:  
@@ -146,6 +143,7 @@ if order == 'D':
 elif order == 'A':
     heap = MinHeap()
 heap.build_heap(item)
+print(heap.heap)
 
 for i in range(len(monkelist)):
     if order == 'A':
