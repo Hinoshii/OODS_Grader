@@ -25,8 +25,7 @@ class MinHeap:
     
     def insert(self, value):  
         self.heap.append(value)  
-        i = len(self.heap) - 1 
-        # value format : (str, agi, id) > (str, agi, id)
+        i = len(self.heap) - 1  
         while i > 0 and self.heap[i] < self.heap[self.parent(i)]:
             #swap node if child lessthan parent 
             self.heap[i], self.heap[self.parent(i)] = self.heap[self.parent(i)], self.heap[i]  
@@ -54,7 +53,7 @@ class MinHeap:
                 i = child_index  
             else:  
                 break  
-        return min_val  
+        return min_val   
   
     #init heap
     def build_heap(self, input_list):
@@ -78,8 +77,11 @@ class MaxHeap:
     def insert(self, value):  
         self.heap.append(value)  
         i = len(self.heap) - 1  
-        while i > 0 and self.heap[i] > self.heap[self.parent(i)]:
-            #swap node if child morethan parent 
+        while i > 0 and self.heap[i][:-1] >= self.heap[self.parent(i)][:-1]:
+            #swap node if child morethan parent
+            if self.heap[i][:-1] == self.heap[self.parent(i)][:-1] and self.heap[i][-1] < self.heap[self.parent(i)][-1]:
+                self.heap[i], self.heap[self.parent(i)] = self.heap[self.parent(i)], self.heap[i]
+                break
             self.heap[i], self.heap[self.parent(i)] = self.heap[self.parent(i)], self.heap[i]  
             i = self.parent(i)
 
@@ -100,7 +102,7 @@ class MaxHeap:
             child_index = self.left_child(i)  
             if self.right_child(i) < len(self.heap) and self.heap[self.right_child(i)] > self.heap[self.left_child(i)]:  
                 child_index = self.right_child(i)  
-            if self.heap[i] < self.heap[child_index]:  
+            if self.heap[i] < self.heap[child_index] and self.heap[i][:-1] != self.heap[child_index][:-1]: 
                 self.heap[i], self.heap[child_index] = self.heap[child_index], self.heap[i]  
                 i = child_index  
             else:  
@@ -112,7 +114,6 @@ class MaxHeap:
         for i in input_list:
             self.insert(i)
 
-#inp D/str,int,agi/caesar 100 10 100,kla 20 110 20,ton 20 111 10,non 20 110 20
 monkelist = []
 order,priority,monke = input("Enter Input : ").split("/")
 priority = priority.split(",")
@@ -149,7 +150,7 @@ heap.build_heap(item)
 for i in range(len(monkelist)):
     if order == 'A':
         temp = heap.extract_min()
-        print(temp)
+        print(temp[-1])
     if order == 'D':
         temp = heap.extract_max()
-        print(temp)
+        print(temp[-1])
