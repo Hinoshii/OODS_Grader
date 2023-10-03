@@ -1,12 +1,57 @@
-def bubbleRecur(arr, n): #got this from my No1
-    if n <= 1: #base (alr sorted)
-        return arr
+def checkMP(item,previous=None):
+    flag = [True,False]
+    for i in item:
+        if previous == None:
+            previous = i
+        else:
+            if previous > i:
+                flag[0] = False
+            if previous == i:
+                flag[1] = True
+            previous = i
+    return flag
 
-    def sorting(i):
-        if i < n - 1:
-            if arr[i] > arr[i + 1]:
-                arr[i], arr[i + 1] = arr[i + 1], arr[i] 
-            sorting(i + 1)
+def checkKN(item,previous=None):
+    flag = [True,False]
+    for i in item:
+        if previous == None:
+            previous = i
+        else:
+            if previous < i:
+                flag[0] = False
+            if previous == i:
+                flag[1] = True
+            previous = i
+    return flag
 
-    sorting(0)
-    bubbleRecur(arr, n - 1)
+def checkR(item):
+    if item.count(item[0]) == len(item):
+        return True
+    return False
+
+inp = list(map(int,input("Enter Input : ")))
+isDrome = False
+
+if checkR(inp):
+    print("Repdrome")
+    exit()
+
+drome = checkMP(inp)
+if drome == [True,True]:
+    print("Plaindrome")
+    isDrome = True
+elif drome == [True,False]:
+    print("Metadrome")
+    isDrome = True
+
+drome = checkKN(inp)
+if drome == [True,True]:
+    print("Nialpdrome")
+    isDrome = True
+elif drome == [True,False]:
+    print("Katadrome")
+    isDrome = True
+
+if not isDrome:
+    print("Nondrome")
+
